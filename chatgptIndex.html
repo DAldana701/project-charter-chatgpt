@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job Hunting - IS/IT/Cybersecurity Internship/Part-Time - Project Charter</title>
+  <style>
+    /* --------- Base / Theme --------- */
+    :root{
+      --bg: #0b0c0f;
+      --card: #111318;
+      --card-2: #151922;
+      --text: #eaeef6;
+      --muted:#9aa5b1;
+      --brand:#66d19e;   /* green */
+      --brand-2:#76b4ff; /* blue */
+      --accent:#f5c26b;  /* amber */
+      --danger:#ff6b6b;  /* red */
+      --success:#7ed957; /* lime */
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --card-2:#f8fafc;
+        --text:#0f172a;
+        --muted:#475569;
+        --brand:#2d5d3b;
+        --brand-2:#2563eb;
+        --accent:#b45309;
+        --danger:#dc2626;
+        --success:#16a34a;
+        --shadow: 0 10px 24px rgba(2,6,23,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background:linear-gradient(180deg,var(--bg),color-mix(in oklab, var(--bg) 92%, #000));
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    /* --------- App Layout --------- */
+    .shell{display:grid; grid-template-columns: 280px 1fr; gap:22px; max-width:1200px; margin:0 auto; padding:24px;}
+    @media (max-width: 1024px){.shell{grid-template-columns: 1fr}}
+
+    /* Sidebar */
+    .sidebar{position:sticky; top:16px; align-self:start; background:var(--card); border:1px solid color-mix(in hsl, var(--text) 8%, transparent); border-radius:var(--radius-xl); box-shadow:var(--shadow)}
+    .sidebar .brand{display:flex; align-items:center; gap:10px; padding:18px 18px 6px 18px}
+    .logo{inline-size:36px; block-size:36px; display:grid; place-content:center; border-radius:12px; background:conic-gradient(from 210deg, var(--brand), var(--brand-2)); color:#fff; font-weight:700}
+    .brand h1{font-size:16px; margin:0}
+    .brand p{margin:2px 0 0; color:var(--muted); font-size:12px}
+
+    nav.toc{padding: 6px 12px 14px 12px}
+    .toc-search{padding: 0 6px 10px}
+    .toc-search input{width:100%; padding:10px 12px; border-radius:12px; border:1px solid color-mix(in hsl, var(--text) 12%, transparent); background:var(--card-2); color:var(--text)}
+    .toc a{display:flex; gap:10px; align-items:center; padding:10px 12px; margin:6px; border-radius:12px; color:inherit; text-decoration:none; border:1px solid transparent}
+    .toc a:hover{background:var(--card-2); border-color:color-mix(in hsl, var(--text) 10%, transparent)}
+    .toc a.active{background:linear-gradient(180deg, color-mix(in oklab, var(--brand) 20%, transparent), transparent); border-color:color-mix(in oklab, var(--brand) 30%, transparent)}
+    .toc .num{font-size:12px; inline-size:22px; block-size:22px; display:grid; place-content:center; border-radius:8px; background:color-mix(in oklab, var(--brand) 25%, transparent)}
+
+    /* Header */
+    .hero{background:radial-gradient(1000px 200px at 40% -20%, color-mix(in oklab, var(--brand-2) 22%, transparent), transparent), radial-gradient(900px 220px at 80% -10%, color-mix(in oklab, var(--brand) 18%, transparent), transparent); border-radius:var(--radius-xl); padding:28px; box-shadow:var(--shadow); border:1px solid color-mix(in hsl, var(--text) 8%, transparent)}
+    .hero h2{margin:0 0 8px 0; font-size:26px}
+    .hero p{margin:0; color:var(--muted)}
+
+    /* Content area */
+    .content{display:flex; flex-direction:column; gap:18px}
+
+    /* Card + Accordion */
+    details.section{background:var(--card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid color-mix(in hsl, var(--text) 8%, transparent); box-shadow:var(--shadow)}
+    .section > summary{list-style:none; cursor:pointer; user-select:none; display:flex; align-items:center; gap:12px; padding:18px 22px; background:linear-gradient(180deg, var(--card-2), transparent); outline:none}
+    .section > summary::-webkit-details-marker{display:none}
+    .section .chev{inline-size:18px; block-size:18px; border:2px solid currentColor; border-left:0; border-top:0; transform:rotate(-45deg); transition: transform .25s ease}
+    [data-collapsed="false"] > summary .chev{transform:rotate(45deg)}
+    .section .title{font-size:18px; font-weight:700; display:flex; align-items:center; gap:10px}
+    .section .body{padding:18px 22px; overflow:hidden; height:0; transition:height .35s ease}
+
+    /* Utilities */
+    .toolbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .btn{appearance:none; border:1px solid color-mix(in hsl, var(--text) 12%, transparent); background:var(--card-2); color:inherit; padding:10px 12px; border-radius:12px; cursor:pointer}
+    .btn:hover{background:color-mix(in hsl, var(--card-2) 80%, #fff 20%)}
+    .chip{display:inline-flex; gap:8px; align-items:center; padding:8px 10px; border-radius:999px; border:1px dashed color-mix(in hsl, var(--text) 16%, transparent); font-size:12px; color:var(--muted)}
+    .grid{display:grid; gap:16px}
+
+    /* Preserve / enhance original content styles within body blocks */
+    .student-info, .section .instructions, .completed-work, .scope-card,
+    .stakeholder-table, .power-interest-grid .grid-placeholder, .deliverable-card,
+    .budget-table, .budget-note, .tool-grid .screenshot-card{color:var(--text)}
+
+    .student-info{background: color-mix(in oklab, var(--brand) 12%, transparent); border-left: 4px solid var(--brand); padding:16px; border-radius:12px}
+    .instructions{background: color-mix(in oklab, var(--brand-2) 12%, transparent); border-radius:12px; border:1px dashed color-mix(in oklab, var(--brand-2) 40%, transparent); padding:12px}
+    .completed-work{background: color-mix(in oklab, var(--success) 14%, transparent); border:1px solid color-mix(in oklab, var(--success) 40%, transparent); border-radius:12px}
+    .scope-card{background: color-mix(in oklab, #fff 3%, var(--card-2)); border-left:4px solid transparent; border-radius:12px}
+    .scope-card.in-scope{border-left-color: var(--success)}
+    .scope-card.roadmap{border-left-color: var(--brand-2)}
+    .scope-card.out-scope{border-left-color: var(--danger)}
+
+    table.stakeholder-table, .budget-table{width:100%; border-collapse:collapse; border-radius:12px; overflow:hidden}
+    .stakeholder-table th, .budget-table th{background: color-mix(in oklab, var(--brand) 25%, #0000); color:var(--text); padding:12px; text-align:left}
+    .stakeholder-table td, .budget-table td{padding:10px 12px; border-bottom:1px solid color-mix(in hsl, var(--text) 10%, transparent)}
+    .stakeholder-table tr:hover{background: color-mix(in hsl, var(--text) 6%, transparent)}
+
+    .power-interest-grid .grid-placeholder{background: color-mix(in oklab, var(--brand-2) 10%, transparent); border:2px dashed color-mix(in oklab, var(--brand-2) 40%, transparent)}
+
+    .deliverable-card{background: color-mix(in oklab, var(--brand) 8%, transparent); border-left:4px solid var(--brand); border-radius:12px}
+    .budget-note{background: color-mix(in oklab, var(--accent) 14%, transparent); border:1px dashed var(--accent); border-radius:12px}
+
+    /* Sticky quick actions */
+    .quick{position:sticky; top:16px; z-index:10; display:flex; gap:8px; margin-bottom:6px}
+
+    img{max-width:100%; height:auto}
+    a{color:color-mix(in oklab, var(--brand-2) 80%, #7aa2ff)}
+    code,kbd,pre{font-family: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace}
+
+  /* Explicit theme overrides */
+  html[data-theme="light"]{
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --card-2:#f8fafc;
+    --text:#0f172a;
+    --muted:#475569;
+    --brand:#2d5d3b;
+    --brand-2:#2563eb;
+    --accent:#b45309;
+    --danger:#dc2626;
+    --success:#16a34a;
+    --shadow: 0 10px 24px rgba(2,6,23,.08);
+  }
+  html[data-theme="dark"]{
+    /* uses :root defaults */
+  }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Sidebar / TOC -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">PC</div>
+        <div>
+          <h1>Project Charter</h1>
+          <p>Job Hunting — IS/IT/Cybersecurity</p>
+        </div>
+      </div>
+      <nav class="toc" id="toc">
+        <div class="toc-search"><input id="tocSearch" placeholder="Filter sections…" aria-label="Filter sections"/></div>
+        <!-- Links injected by JS -->
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="content">
+      <header class="hero">
+        <h2>Job Hunting - IS/IT/Cybersecurity Internship/Part-Time</h2>
+        <p>Project Charter - Managing IT Projects Course</p>
+        <div class="toolbar" style="margin-top:12px">
+          <button class="btn" id="expandAll">Expand all</button>
+          <button class="btn" id="collapseAll">Collapse all</button>
+          <button class="btn" id="themeToggle" aria-pressed="false">🌗 Toggle theme</button>
+          <span class="chip">Tip: click a section title to toggle</span>
+        </div>
+      </header>
+
+      <!-- Student Information -->
+      <section class="card" aria-labelledby="student-info-title">
+        <div class="body" style="background:var(--card); border:1px solid color-mix(in hsl, var(--text) 8%, transparent); border-radius:var(--radius-xl); padding:18px; box-shadow:var(--shadow); height:auto; overflow:visible">
+          <h3 id="student-info-title" style="margin-top:0">Student Information</h3>
+          <div class="student-info">
+            <div class="info-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+              <div class="info-item"><div class="info-label">Student Name:</div><div class="info-value">Daniel Aldana</div></div>
+              <div class="info-item"><div class="info-label">Course:</div><div class="info-value">Managing IT Projects</div></div>
+              <div class="info-item"><div class="info-label">Semester:</div><div class="info-value">Fall 2025</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 1 -->
+      <details class="section" id="sec-1">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">📋 1. Project Title & Description</span></summary>
+        <div class="body">
+          <div class="instructions"><strong>Instructions:</strong> Replace the placeholder below with your specific project information. Include a clear project name and 2-3 sentences describing what you will deliver.</div>
+          <div class="placeholder" style="background: color-mix(in oklab, var(--accent) 20%, transparent); border:2px dashed var(--accent); border-radius:12px; padding:16px; color:var(--text)">
+            <h3>Project Title: Job Hunting - IS/IT/Cybersecurity Internship/Part-Time</h3>
+            <ul>
+              <li>This semester-long project will focus on job hunting to prepare and apply to internships/part-time opportunities in relation to my studies.</li>
+              <li>This will involve me conducting a self-assessment of all my academic achievements, creating and tailoring application documents based on job requirements, communicating with professors and peers to increase confidence in applying to positions, and getting feedback on resumes and cover letters from stakeholders (professors, counselors, peers, etc.).</li>
+              <li>This project will implement the cybersecurity knowledge I've learned thus far and bring me closer to my mission of finding working opportunities.</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+
+      <!-- SECTION 2 -->
+      <details class="section" id="sec-2">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">🎯 2. Vision, Mission & Strategy Alignment</span></summary>
+        <div class="body">
+          <div class="instructions"><strong>Instructions:</strong> Explain how this project aligns with your personal mission, vision, and strategic goals. Reference your previous mission/vision/strategy work.</div>
+          <h4>Personal Mission Connection:</h4>
+          <ul>
+            <li>This project supports my mission of graduating and finding meaningful work opportunities in the CIS field.</li>
+            <li>By preparing application documents, gaining feedback, and applying to internships, I am working productively toward the same goal my mission highlights: pursuing opportunities that interest me while learning and growing from new experiences.</li>
+          </ul>
+          <h4>Vision Alignment:</h4>
+          <ul>
+            <li>This project supports and aligns with my vision by helping me secure an internship or part-time role in the CIS field.</li>
+            <li>Finding, applying for, and securing a position through this project will move me toward financial stability while also providing valuable real-world experience.</li>
+          </ul>
+          <h4>Strategic Goal Support:</h4>
+          <ul>
+            <li>Conducting a job search will advance specific strategies, mainly expanding my network and self-learning.</li>
+            <li>By engaging with my stakeholders, I will grow and establish a great network with individuals I can rely on now and in the future.</li>
+            <li>Furthermore, this project will motivate me to conduct study plans and review cybersecurity concepts to ensure that my knowledge in this area meets manager and job requirements, and positions me to confidently pursue certifications in the future.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- SECTION 3 -->
+      <details class="section" id="sec-3">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">💼 3. Business Case & Justification</span></summary>
+        <div class="body">
+          <div class="instructions"><strong>Instructions:</strong> Describe how this project will add value to you either professionally or personally. What benefits will you gain?</div>
+          <h4>Professional Value:</h4>
+          <ul>
+            <li>Performing and completing this project will directly benefit my future career.</li>
+            <li>I will learn new skills and strengthen existing ones throughout the execution of this project.</li>
+            <li>It will also require me to engage with multiple stakeholders, thus building valuable connections and expanding my professional network.</li>
+            <li>In addition, I will tailor application documents to specific job requirements, demonstrating commitment and genuine interest in each position I apply to.</li>
+          </ul>
+          <h4>Personal Value:</h4>
+          <ul>
+            <li>This project will help me grow in confidence, which I have struggled with in the past.</li>
+            <li>I often compare myself to others and their experiences, which fuels my imposter syndrome.</li>
+            <li>I will gain a supportive environment that increases my self-worth by stepping out of my comfort zone, expanding my network, and highlighting my academic achievements.</li>
+            <li>With this growing confidence, I can focus more clearly on my journey and continue following my mission and vision.</li>
+          </ul>
+          <h4>Learning Outcomes:</h4>
+          <ul>
+            <li>Creating and tailoring resumes, cover letters, and portfolios.</li>
+            <li>Strengthening technical skills and developing effective study plans.</li>
+            <li>Showcasing and highlighting my experiences at networking events or through digital platforms like my portfolio and LinkedIn.</li>
+            <li>Strengthening my ability to communicate confidently at both professional and personal levels — whether in follow-ups, expressing interest, or casual conversations.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- SECTION 4 -->
+      <details class="section" id="sec-4">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">📏 4. High-Level Scope</span></summary>
+        <div class="body">
+          <div class="completed-work"><div class="completed-header" style="font-weight:700">✅ Use Your Previous Scope Assignment</div><p>Copy and paste your scope document content from your previous assignment into the placeholders below.</p></div>
+          <div class="scope-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-top:12px">
+            <div class="scope-card in-scope">
+              <h4>✅ In Scope for Semester Project</h4>
+              <ul>
+                <li>Conducting self-assessments of my academic skills, knowledge, and experiences</li>
+                <li>Using resources offered by the CSULA Career Center for resume reviews, interview practice, and job search support</li>
+                <li>Communicating with faculty, students, and professionals for guidance and feedback</li>
+                <li>Tailoring resumes, cover letters, and other application documents to specific job postings</li>
+                <li>Reviewing CIS course materials to highlight and evidence relevant knowledge and skills</li>
+                <li>Researching companies and analyzing job requirements to understand business values and processes</li>
+              </ul>
+            </div>
+            <div class="scope-card roadmap">
+              <h4>🗺️ Roadmap Items (≤ 6 Months After Semester Ends)</h4>
+              <ul>
+                <li>Following up with professors and peers regarding ongoing career progress</li>
+                <li>Attending networking events to expand professional connections</li>
+                <li>Focusing on new semester courses and analyzing additional skills gained</li>
+                <li>Conducting hands-on activities to strengthen cybersecurity concepts</li>
+                <li>Preparing for the ISC2 CC Certification exam</li>
+                <li>Developing a professional portfolio (e.g., GitHub projects, personal website)</li>
+              </ul>
+            </div>
+            <div class="scope-card out-scope">
+              <h4>❌ Out of Scope</h4>
+              <ul>
+                <li>Applying to mid-to-high level IS/IT/Cybersecurity Jobs
+                  <ul><li>Long-term (vision statement)</li></ul>
+                </li>
+                <li>Taking the ISC2 CC Certification (or any certification)
+                  <ul><li>Not feasible within the semester timeframe</li></ul>
+                </li>
+                <li>Conducting a High-Level Resume (2-page)
+                  <ul><li>Too big and challenging to conduct at present</li></ul>
+                </li>
+                <li>Applying to out-of-state positions
+                  <ul><li>Too big (even if it’s an internship)</li></ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- SECTION 5 -->
+      <details class="section" id="sec-5">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">👥 5. Stakeholder Register</span></summary>
+        <div class="body">
+          <div class="completed-work"><div class="completed-header" style="font-weight:700">✅ Use Your Previous Stakeholder Assignment</div><p>Copy and paste your stakeholder information from your previous assignment. Include both the table and your power-interest grid.</p></div>
+          <table class="stakeholder-table">
+            <thead>
+              <tr>
+                <th>Stakeholder</th><th>Category</th><th>Role/Interest</th><th>Power</th><th>Interest</th><th>Engagement Strategy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Family</td><td>Internal</td><td>Provide support and motivation throughout the project timeline.</td><td>Low</td><td>High</td><td>Keep Informed: Weekly progress conversations, feedback and monitoring, and a supportive environment (motivation).</td></tr>
+              <tr><td>Friends</td><td>Internal</td><td>Provide support and share work experiences to set expectations for a working environment.</td><td>Low</td><td>Medium</td><td>Keep Informed: Bi-weekly check-ins on progress, discuss work experiences and job expectations.</td></tr>
+              <tr><td>Professors</td><td>Internal</td><td>Guide and provide feedback on application documents; support the project concept; share professional experiences (how they started, how they grew). Contacts: Daniel Razmjou (drazmjo2@calstatela.edu), Arun Aryal (aaryal@calstatela.edu).</td><td>Medium</td><td>High</td><td>Manage Closely: Weekly-to-biweekly discussions on progress; feedback on resumes/cover letters; guidance on professional display (e.g., LinkedIn).</td></tr>
+              <tr><td>Hiring Managers</td><td>External</td><td>Ensure I’m qualified, meet job requirements, and fit team needs.</td><td>High</td><td>High</td><td>Manage Closely: Align to job requirements; tailor application materials; engage professionally and promptly.</td></tr>
+              <tr><td>Classmates</td><td>External</td><td>Provide professional support and share insights from their work experiences.</td><td>Low</td><td>Medium</td><td>Keep Informed: Weekly-to-biweekly progress conversations; advice for interview preparation and job readiness.</td></tr>
+              <tr><td>Clubs (e.g., CARP)</td><td>External</td><td>Support the project and provide insight into working environments (may not be CIS-related).</td><td>Low</td><td>Medium</td><td>Monitor: Monthly progress conversations; supportive environment; gain insight into workplace expectations.</td></tr>
+              <tr><td>Professionals (Networking Events)</td><td>External</td><td>Provide career guidance, opportunities, and general support.</td><td>Medium</td><td>High</td><td>Manage Closely: Build strong professional relationships; practice elevator pitch/LinkedIn; request feedback on application documents.</td></tr>
+              <tr><td>ISC2</td><td>Regulatory</td><td>Guide and support CC certification preparation (rules, format, resources).</td><td>High</td><td>Low</td><td>Keep Satisfied: Follow rules and procedures; use provided resources; create appropriate study plans.</td></tr>
+              <tr><td>Career Counselors</td><td>External</td><td>Provide professional and personal guidance, resources, and notifications for networking events.</td><td>Medium</td><td>Medium</td><td>Keep Informed: Deep discussions on job hunting; resume/cover feedback; use resources (resume builder, mock interviews); networking advice; upcoming events.</td></tr>
+            </tbody>
+          </table>
+          <div class="power-interest-grid">
+            <h4>Power-Interest Grid Visualization</h4>
+            <div class="grid-placeholder">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;">
+                <div style="background:#88e287;padding:12px;border:1px solid #e9ecef;border-radius:8px;">
+                  <strong>High Power / Low Interest — Keep Satisfied</strong>
+                  <ul><li>ISC2</li></ul>
+                </div>
+                <div style="background:#e99488;padding:12px;border:1px solid #e9ecef;border-radius:8px;">
+                  <strong>High Power / High Interest — Manage Closely</strong>
+                  <ul>
+                    <li>Hiring Managers</li>
+                    <li>Professors</li>
+                    <li>Professionals (Networking Events)</li>
+                  </ul>
+                </div>
+                <div style="background:#e5e88c;padding:12px;border:1px solid #e9ecef;border-radius:8px;">
+                  <strong>Low Power / Low Interest — Monitor</strong>
+                  <ul><li>Clubs (e.g., CARP)</li></ul>
+                </div>
+                <div style="background:#ceb1e8;padding:12px;border:1px solid #e9ecef;border-radius:8px;">
+                  <strong>Low Power / High Interest — Keep Informed</strong>
+                  <ul>
+                    <li>Family</li>
+                    <li>Friends</li>
+                    <li>Classmates</li>
+                    <li>Career Counselors</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- SECTION 6 -->
+      <details class="section" id="sec-6">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">📦 6. Deliverables &amp; Definition of Done</span></summary>
+        <div class="body">
+          <div class="instructions"><strong>Instructions:</strong> For each deliverable, list a clear <em>Definition of Done</em>, core tasks, dependencies, and rough effort estimates.</div>
+          <div class="deliverable-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-top:10px">
+            <div class="deliverable-card">
+              <h4>A Well-Constructed Resume(s)</h4>
+              <div class="deliverable-meta"><strong>Type:</strong> Tangible</div>
+              <ul>
+                <li><strong>SMART Description:</strong> Create 1-page resumes aligning my experiences with job requirements; key step toward landing interviews; completion by mid-semester.</li>
+                <li><strong>Definition of Done:</strong> Reviewed by multiple stakeholders; tailored to job requirements; accurately reflects my academic experiences.</li>
+              </ul>
+            </div>
+            <div class="deliverable-card">
+              <h4>Increase Professional Network</h4>
+              <div class="deliverable-meta"><strong>Type:</strong> Outcome</div>
+              <ul>
+                <li><strong>SMART Description:</strong> Communicate with stakeholders at campus and/or networking events; expand my network, measured by before-and-after comparison; goal: maintain long-term connections; metric will conclude by the end of the semester.</li>
+                <li><strong>Definition of Done:</strong> Initiated conversations with new stakeholders; work insights gained; added LinkedIn connections; established trusted relationship.</li>
+              </ul>
+            </div>
+            <div class="deliverable-card">
+              <h4>ISC2 CC Preparation</h4>
+              <div class="deliverable-meta"><strong>Type:</strong> Intangible</div>
+              <ul>
+                <li><strong>SMART Description:</strong> ISC2 CC certification preparation by conduct study plans; time and progress will be documented weekly; increase expertise and knowledge for security focus positions; preparation expected to be completed by mid-to-end of semester.</li>
+                <li><strong>Definition of Done:</strong> Study plan documented; resources reviewed; professional guidance sought; mock exams completed.</li>
+              </ul>
+            </div>
+            <div class="deliverable-card">
+              <h4>Applying to Job Positions</h4>
+              <div class="deliverable-meta"><strong>Type:</strong> Intangible</div>
+              <ul>
+                <li><strong>SMART Description:</strong> Analyze job requirements and apply to positions based on qualifications; track applied jobs; final steps toward achieving my mission: landing a CIS position; completion by end of semester.</li>
+                <li><strong>Definition of Done:</strong> Ensure application documents aligned with requirements; applications submitted; engaged in genuine conversations with hiring managers; mock interviews completed.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- SECTION 7 -->
+      <details class="section" id="sec-7">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">💲 7. Budget Estimation</span></summary>
+        <div class="body">
+          <div class="instructions"><strong>Instructions:</strong> Provide a realistic, draft-level cost view. Include tools, optional subscriptions, study materials, travel, and note time as a resource.</div>
+          <h4>Labor Costs</h4>
+          <p>The primary labor cost for this project is my own effort in developing deliverables, networking, and preparing application materials. Based on my WBS and duration estimates, I expect to spend approximately <strong>72–96 hours</strong> over the semester. Using a conservative student/entry-level market rate of <strong>$20/hour</strong>, this equates to a labor cost range of <strong>$1,440–$1,920</strong>.</p>
+          <table class="budget-table">
+            <thead><tr><th>Role</th><th>Hours</th><th>Rate</th><th>Estimated Cost</th></tr></thead>
+            <tbody><tr><td>Student PM/Analyst (self)</td><td>72–96</td><td>$20/hr</td><td>$1,440 – $1,920</td></tr></tbody>
+          </table>
+          <h4>Equipment &amp; Software</h4>
+          <table class="budget-table">
+            <thead><tr><th>Item</th><th>Description</th><th>Estimated Cost</th></tr></thead>
+            <tbody>
+              <tr><td>GitHub Pages / Notion / Google Sheets</td><td>Hosting and tracking tools for portfolio and application pipeline</td><td>$0</td></tr>
+              <tr><td>LinkedIn Learning</td><td>Self-study videos for cybersecurity refreshers</td><td>$0 (via CSULA access)</td></tr>
+              <tr><td>Microsoft Office (optional)</td><td>Productivity suite for document authoring (or use Google Docs)</td><td>$0–$60</td></tr>
+            </tbody>
+          </table>
+          <h4>Materials</h4>
+          <table class="budget-table">
+            <thead><tr><th>Item</th><th>Description</th><th>Estimated Cost</th></tr></thead>
+            <tbody>
+              <tr><td>Resume Printing</td><td>Hard copies for networking events/interviews (as needed)</td><td>$10–$20</td></tr>
+              <tr><td>ISC2 CC Prep Materials</td><td>Optional practice tests and study guides for certification preparation</td><td>$0–$60</td></tr>
+            </tbody>
+          </table>
+          <h4>Services</h4>
+          <table class="budget-table">
+            <thead><tr><th>Item</th><th>Description</th><th>Estimated Cost</th></tr></thead>
+            <tbody>
+              <tr><td>Career Center Services</td><td>Resume reviews, mock interviews, advising</td><td>$0 (included)</td></tr>
+              <tr><td>LinkedIn Premium (optional)</td><td>Applicant insights, InMail, and networking tools (1 month)</td><td>$40</td></tr>
+              <tr><td>Networking Events (transport/fees)</td><td>Local transit, parking, or entry for on/off-campus events</td><td>$20–$40</td></tr>
+              <tr><td>Workshops/Meetups (optional)</td><td>Professional sessions or student org events (if applicable)</td><td>$0–$20</td></tr>
+            </tbody>
+          </table>
+          <h4>Contingency &amp; Risks</h4>
+          <p>Because this project primarily uses free student resources, overall budget risk is low. A <strong>15% contingency reserve</strong> is included to cover unexpected costs (e.g., materials, transportation, or optional services). Based on the estimates above, this contingency amounts to approximately <strong>$150–$250</strong>.</p>
+          <ul>
+            <li><strong>Risk 1 – Certification prep costs exceed plan:</strong> Mitigate by relying on free LinkedIn Learning and CSULA materials before purchasing guides.</li>
+            <li><strong>Risk 2 – Event transportation/fees higher than expected:</strong> Mitigate by prioritizing free on-campus or virtual events.</li>
+            <li><strong>Risk 3 – Additional printing or supplies needed:</strong> Mitigate by using digital distribution when possible and printing selectively.</li>
+          </ul>
+          <h4>Budget Summary</h4>
+          <table class="budget-table">
+            <tbody>
+              <tr><td><strong>SUBTOTAL DIRECT COSTS</strong></td><td>$1,805.00</td></tr>
+              <tr><td><strong>Contingency Reserve (15%)</strong></td><td>$270.75</td></tr>
+              <tr><td><strong>TOTAL PROJECT BUDGET</strong></td><td><strong>$2,075.75</strong></td></tr>
+            </tbody>
+          </table>
+          <h4>Budget Breakdown</h4>
+          <table class="budget-table">
+            <thead><tr><th>Category</th><th>% of Total</th><th>Amount</th></tr></thead>
+            <tbody>
+              <tr><td>Labor</td><td>80.9%</td><td>$1,680.00</td></tr>
+              <tr><td>Equipment/Software</td><td>1.4%</td><td>$30.00</td></tr>
+              <tr><td>Materials</td><td>1.7%</td><td>$35.00</td></tr>
+              <tr><td>Services</td><td>2.9%</td><td>$60.00</td></tr>
+              <tr><td>Contingency</td><td>13.0%</td><td>$270.75</td></tr>
+            </tbody>
+          </table>
+          <p class="budget-note">Assumptions used for midpoint estimate: 84 hours at $20/hr; Equipment/Software $30; Materials $35; Services $60; Contingency 15% of direct costs.</p>
+        </div>
+      </details>
+
+      <!-- SECTION 8 -->
+      <details class="section" id="sec-8">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">🛠️ 8. Project Methodology</span></summary>
+        <div class="body">
+          <div class="instructions"><strong>Instructions:</strong> Explain your chosen methodology, why it fits your project, and include a diagram illustrating the process flow.</div>
+          <p><strong>Chosen Methodology:</strong> Predictive (Waterfall)</p>
+          <ul>
+            <li>This project follows a <em>Predictive methodology</em> because most deliverables are fixed in scope and follow a traditional sequence of planning, execution, monitoring, and closing.</li>
+            <li>Examples include resume drafts, ISC2 CC preparation, and job applications.</li>
+            <li>While some deliverables will go through iterative feedback (such as resume revisions), the majority of tasks are planned in advance with clear outcomes.</li>
+            <li>This makes the predictive approach the best overall fit for my project.</li>
+          </ul>
+          <div class="diagram">
+            <img src="ProjectPlanDiagram.png" alt="Predictive Methodology Diagram" style="max-width:100%; height:auto; border:1px solid #ccc; border-radius:8px;">
+            <p class="caption">Figure 1: Predictive Project Plan Diagram (Weeks 2–Final Week)</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- SECTION 9 -->
+      <details class="section" id="sec-9">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">🧰 9. Project Tools</span></summary>
+        <div class="body">
+          <div class="instructions"><strong>Instructions:</strong> Explain your tool selection, why it fits the chosen methodology, and include screenshots showing how you set up the project.</div>
+          <h4>Tool Selection Explanation</h4>
+          <ul>
+            <li>I looked at three tools for my project: <strong>Microsoft Project</strong>, <strong>Trello</strong>, and <strong>Monday.com</strong>.</li>
+            <li>At first, I thought about using Microsoft Project, but it felt like way too much for what I needed; there are a lot of features, and I knew I’d probably get overwhelmed.</li>
+            <li>I also thought about Trello since I’ve used it before in other classes. Trello is great for quick boards, but it’s really better for Agile projects, and since my project is predictive, I felt it wasn’t the right match.</li>
+            <li>I ended up going with <strong>Monday.com</strong>. When I first opened it, I felt overwhelmed too, but once I learned how to use it, I realized it was exactly what I needed.</li>
+            <li>Monday.com let me group tasks by deliverables, set dependencies, and assign timelines; for example, applying to jobs depends on finishing resumes, which depends on resume prep.</li>
+            <li>It took me a couple of days to set everything up, but now I have a timeline that matches my WBS and methodology diagram (and the class schedule), which keeps me organized through the semester.</li>
+          </ul>
+          <h4>Screenshots</h4>
+          <div class="tool-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-top:10px">
+            <div class="screenshot-card"><img src="ProjectTool1.png" alt="Monday.com board showing overall semester-long and ISC2 CC preparation"><p class="caption">Figure 2: Overall semester-long tasks and ISC2 CC preparation with dependencies and timelines.</p></div>
+            <div class="screenshot-card"><img src="ProjectTool2.png" alt="Monday.com board showing resume preparation process and resume construction"><p class="caption">Figure 3: Resume preparation and construction tasks with linked dependencies.</p></div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Footer Note -->
+      <details class="section" id="sec-10">
+        <summary role="button" aria-expanded="false"><span class="chev"></span><span class="title">📝 Additional Charter Components</span></summary>
+        <div class="body">
+          <div class="instructions"><strong>Note for Future Updates:</strong> This charter will be expanded throughout the semester as we cover additional project management components including:
+            <ul>
+              <li>Project Methodology Selection</li>
+              <li>Deliverables & Definition of Done</li>
+              <li>High-Level Timeline & Milestones</li>
+              <li>Execution Plan Overview</li>
+              <li>Risk Register</li>
+              <li>Acceptance Criteria</li>
+              <li>Project Manager Authority & Approvals</li>
+            </ul>
+            Keep this HTML file - you'll be adding to it as the semester progresses!
+          </div>
+        </div>
+      </details>
+    </main>
+  </div>
+
+  <script>
+    // Build a TOC from details elements
+    const toc = document.getElementById('toc');
+    const sections = [...document.querySelectorAll('details.section')];
+    sections.forEach((sec, i) => {
+      const label = sec.querySelector('.title')?.textContent?.trim() || `Section ${i+1}`;
+      sec.id = sec.id || `section-${i+1}`;
+      const a = document.createElement('a');
+      a.href = `#${sec.id}`;
+      a.innerHTML = `<span class="num">${i+1}</span><span>${label}</span>`;
+      toc.appendChild(a);
+    });
+
+    // Active link on scroll
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const id = e.target.id;
+        const link = toc.querySelector(`a[href="#${id}"]`);
+        if(e.isIntersecting){
+          toc.querySelectorAll('a').forEach(a=>a.classList.remove('active'));
+          link?.classList.add('active');
+        }
+      })
+    }, {rootMargin: "-40% 0px -55% 0px", threshold: 0});
+    sections.forEach(s=>observer.observe(s));
+
+    // Filter TOC
+    const filter = document.getElementById('tocSearch');
+    filter?.addEventListener('input', (e)=>{
+      const q = e.target.value.toLowerCase();
+      toc.querySelectorAll('a').forEach(a=>{
+        a.style.display = a.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+    // ---- Robust, cross-browser smooth accordion ----
+    // Keep details open so UA styles don't hide content; we manage collapse state ourselves.
+    sections.forEach(sec => {
+      sec.setAttribute('open','');
+      sec.dataset.collapsed = 'true'; // start collapsed
+      const body = sec.querySelector('.body');
+      const summary = sec.querySelector('summary');
+      body.style.height = '0px';
+      // improve keyboard a11y
+      summary.setAttribute('role', 'button');
+      summary.setAttribute('tabindex', '0');
+      summary.setAttribute('aria-expanded', 'false');
+      const toggle = (expand) => {
+        const willExpand = (expand !== undefined) ? expand : (sec.dataset.collapsed === 'true');
+        summary.setAttribute('aria-expanded', String(willExpand));
+        if (willExpand) {
+          // expand
+          sec.dataset.collapsed = 'false';
+          body.style.height = 'auto';
+          const end = body.getBoundingClientRect().height;
+          body.style.height = '0px';
+          requestAnimationFrame(()=>{ body.style.height = end + 'px'; });
+          body.addEventListener('transitionend', function onEnd(){
+            body.style.height = 'auto';
+            body.removeEventListener('transitionend', onEnd);
+          }, {once:true});
+        } else {
+          // collapse
+          const start = body.getBoundingClientRect().height;
+          body.style.height = start + 'px';
+          requestAnimationFrame(()=>{ body.style.height = '0px'; });
+          body.addEventListener('transitionend', function onEnd(){
+            body.removeEventListener('transitionend', onEnd);
+          }, {once:true});
+          sec.dataset.collapsed = 'true';
+        }
+      };
+      summary.addEventListener('click', (e)=>{ e.preventDefault(); toggle(); });
+      summary.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+      });
+      // store function for buttons
+      sec._toggle = toggle;
+    });
+
+    // Expand/Collapse buttons
+    document.getElementById('expandAll').addEventListener('click', ()=>sections.forEach(s=>s._toggle?.(true)));
+    document.getElementById('collapseAll').addEventListener('click', ()=>sections.forEach(s=>s._toggle?.(false)));
+
+    // Open first two by default
+    sections.slice(0,2).forEach(s=>s._toggle?.(true));
+
+    // --- Theme toggle (persisted) ---
+    const themeBtn = document.getElementById('themeToggle');
+    const rootEl = document.documentElement;
+    const savedTheme = localStorage.getItem('pref-theme');
+    if(savedTheme){
+      rootEl.dataset.theme = savedTheme;
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches){
+      rootEl.dataset.theme = 'light';
+    } else {
+      rootEl.dataset.theme = 'dark';
+    }
+    function updateThemeButton(){
+      const isLight = rootEl.dataset.theme === 'light';
+      themeBtn.setAttribute('aria-pressed', String(isLight));
+      themeBtn.textContent = isLight ? '🌞 Light mode' : '🌙 Dark mode';
+    }
+    updateThemeButton();
+    themeBtn.addEventListener('click', ()=>{
+      const next = rootEl.dataset.theme === 'light' ? 'dark' : 'light';
+      rootEl.dataset.theme = next;
+      localStorage.setItem('pref-theme', next);
+      updateThemeButton();
+    });
+  </script>
+</body>
+</html>
